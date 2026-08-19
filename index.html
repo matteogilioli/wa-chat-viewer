@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f0f2f5">
+<title>WA Chat Viewer</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- =========================== WELCOME SCREEN ============================ -->
+<div id="welcome" class="welcome">
+  <div class="welcome-card">
+    <div class="lang-pick">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.6 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.6-3.8-9S9.5 5.5 12 3z"/></svg>
+      <select id="langSelect" aria-label="Language"></select>
+    </div>
+
+    <div class="welcome-logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.8-.6-3.1-1.3-5.1-4.4-5.3-4.6-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .5-.1.7.5l1 2.4c.1.2.1.4 0 .6l-.4.5-.3.3c-.1.1-.3.3-.1.6.1.3.6 1.1 1.4 1.8 1 .9 1.8 1.2 2 1.3.3.1.4.1.6-.1l.9-1c.2-.2.4-.2.6-.1l2.2 1.1c.2.1.4.2.5.3.1.2.1.7-.1 1.4Z"/></svg>
+    </div>
+    <h1>WA Chat Viewer</h1>
+    <p class="welcome-sub" data-i18n="w.tagline"></p>
+
+    <div id="dropzone" class="dropzone" tabindex="0" role="button" data-i18n-title="w.drop.title">
+      <svg class="dz-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L8 8m4-4 4 4M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+      <strong data-i18n="w.drop.title"></strong>
+      <span data-i18n="w.drop.sub"></span>
+    </div>
+
+    <div class="welcome-alt">
+      <button type="button" class="linkbtn" id="pickFolder" data-i18n="w.folder"></button>
+      <span class="dot">·</span>
+      <button type="button" class="linkbtn" id="pickTxt" data-i18n="w.txt"></button>
+    </div>
+
+    <p class="privacy">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/></svg>
+      <span data-i18n="w.privacy"></span>
+    </p>
+
+    <div id="loadProgress" class="progress" hidden>
+      <div class="progress-bar"><i></i></div>
+      <span class="progress-label"></span>
+    </div>
+    <div id="loadError" class="loaderr" hidden></div>
+  </div>
+
+  <!-- ----------------------- how to export a chat ------------------------ -->
+  <section class="howto">
+    <h2 data-i18n="w.how.title"></h2>
+    <div class="howto-grid">
+      <article class="howto-card">
+        <header>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.6"/><path d="M10.5 5.5h3"/></svg>
+          <h3>iPhone</h3>
+        </header>
+        <ol>
+          <li data-i18n="w.ios.1"></li>
+          <li data-i18n="w.ios.2"></li>
+          <li data-i18n="w.ios.3"></li>
+          <li data-i18n="w.ios.4"></li>
+          <li data-i18n="w.ios.5"></li>
+        </ol>
+      </article>
+      <article class="howto-card">
+        <header>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 10a7 7 0 0 1 14 0"/><path d="M5 10h14v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M7.5 5.5 6 3.5M16.5 5.5 18 3.5"/><circle cx="9.5" cy="7.5" r=".6"/><circle cx="14.5" cy="7.5" r=".6"/></svg>
+          <h3>Android</h3>
+        </header>
+        <ol>
+          <li data-i18n="w.and.1"></li>
+          <li data-i18n="w.and.2"></li>
+          <li data-i18n="w.and.3"></li>
+          <li data-i18n="w.and.4"></li>
+          <li data-i18n="w.and.5"></li>
+        </ol>
+      </article>
+    </div>
+    <p class="howto-note" data-i18n="w.how.note"></p>
+  </section>
+
+  <footer class="welcome-foot" data-i18n="w.foot"></footer>
+</div>
+
+<input type="file" id="fileInput" accept=".zip,application/zip,.txt,text/plain" hidden>
+<input type="file" id="folderInput" webkitdirectory directory multiple hidden>
+<input type="file" id="txtInput" accept=".txt,text/plain" hidden>
+
+<!-- ================================= APP ================================= -->
+<div id="app" class="app" hidden>
+  <!-- Chat wallpaper. Kept out of the scroller so the pattern is rasterised
+       once for the viewport instead of being re-tiled as content scrolls. -->
+  <div class="doodle" aria-hidden="true"></div>
+  <!-- Single shared tooltip: living outside the rows lets them use CSS
+       containment, which stops the browser painting outside each row. -->
+  <div id="tip" class="tip" hidden></div>
+
+  <header class="topbar">
+    <button class="iconbtn" id="btnHome" data-i18n-title="t.back">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="avatar" id="chatAvatar" aria-hidden="true"></div>
+    <div class="topbar-title">
+      <div class="tt-name" id="chatName">Chat</div>
+      <div class="tt-sub" id="chatSub"></div>
+    </div>
+    <button class="iconbtn" id="btnSearch" data-i18n-title="t.search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    </button>
+    <button class="iconbtn" id="btnStats" data-i18n-title="t.stats">
+      <svg viewBox="0 0 24 24"><path d="M4 20V10m6 10V4m6 16v-7"/></svg>
+    </button>
+    <button class="iconbtn" id="btnSettings" data-i18n-title="t.settings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.5 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3.6 14H3.5a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 3.6V3.5a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7h.1a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.2 1Z"/></svg>
+    </button>
+  </header>
+
+  <div id="searchbar" class="searchbar" hidden>
+    <svg class="sb-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input type="search" id="searchInput" data-i18n-ph="s.placeholder" autocomplete="off" enterkeyhint="search">
+    <span class="sb-count" id="searchCount"></span>
+    <button class="iconbtn small" id="searchPrev" data-i18n-title="t.prev"><svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg></button>
+    <button class="iconbtn small" id="searchNext" data-i18n-title="t.next"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+    <button class="iconbtn small" id="searchClose" data-i18n-title="t.close"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+
+  <main id="chat" class="chat">
+    <!-- date of the topmost visible message, pinned while scrolling -->
+    <div id="dateChip" class="datechip" aria-hidden="true"><span></span></div>
+    <div id="list" class="list"></div>
+  </main>
+
+  <button id="btnDown" class="fab" hidden data-i18n-title="t.down">
+    <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+
+  <div class="composer" aria-hidden="true">
+    <div class="composer-fake">
+      <svg viewBox="0 0 24 24" class="c-ico"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/></svg>
+      <span data-i18n="c.readonly"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ================================ PANEL ================================ -->
+<div id="scrim" class="scrim" hidden></div>
+<aside id="panel" class="panel" hidden>
+  <div class="panel-head">
+    <h2 id="panelTitle"></h2>
+    <button class="iconbtn" id="panelClose" data-i18n-title="t.close"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="panel-body" id="panelBody"></div>
+</aside>
+
+<!-- ============================== LIGHTBOX =============================== -->
+<div id="lightbox" class="lightbox" hidden>
+  <div class="lb-head">
+    <span class="lb-title" id="lbTitle"></span>
+    <a class="iconbtn" id="lbDownload" download data-i18n-title="t.download"><svg viewBox="0 0 24 24"><path d="M12 4v12m0 0 4-4m-4 4-4-4M4 20h16"/></svg></a>
+    <button class="iconbtn" id="lbClose" data-i18n-title="t.close"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <button class="lb-nav prev" id="lbPrev" data-i18n-title="t.prev"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="lb-stage" id="lbStage"></div>
+  <button class="lb-nav next" id="lbNext" data-i18n-title="t.next"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/archive.js"></script>
+<script src="js/markers.js"></script>
+<script src="js/parser.js"></script>
+<script src="js/format.js"></script>
+<script src="js/media.js"></script>
+<script src="js/virtual.js"></script>
+<script src="js/render.js"></script>
+<script src="js/panels.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
