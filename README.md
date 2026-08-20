@@ -46,7 +46,7 @@ The file works on phones too, but mobile browsers are reluctant to open local fi
 |---|---|
 | Text | WhatsApp-style bubbles, with `*bold*`, `_italic_`, `~strikethrough~`, ```` ```code``` ```` and clickable links |
 | Mentions | `@Name` highlighted in blue, matched against the participants |
-| Photos and stickers | Preview in the bubble, click for full screen with previous/next |
+| Photos and stickers | Preview in the bubble; photos open full screen with previous/next |
 | Several photos at once | Grouped into an album grid (2, 3, 4 or 2×2 with **+N**), like the app |
 | Videos | First frame as a thumbnail, with duration and a play button |
 | GIFs and animated stickers | Play by themselves, looping and muted |
@@ -158,9 +158,6 @@ A few choices that make the difference against similar viewers:
   what makes most virtualized lists feel stiff on Safari; height corrections above the viewport wait
   until you lift your finger, and the list paints ahead in proportion to your speed, because WebKit
   delivers scroll events late during inertial scrolling.
-
-Measured on an archive of 200,000 messages: opens in 0.6 s, jumps to any message in 1.4 ms,
-full-text search in 38 ms, 44 rows in the DOM, 111 MB of memory.
 
 ## Known limits
 

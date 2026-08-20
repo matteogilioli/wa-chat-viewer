@@ -352,7 +352,7 @@
       const stage = $('lbStage');
       stage.innerHTML = '';
       $('lbTitle').textContent = Media.prettyName(entry.base) +
-        (this.items.length > 1 ? '  ·  ' + (this.idx + 1) + ' di ' + this.items.length : '');
+        (this.items.length > 1 ? '  ·  ' + (this.idx + 1) + ' / ' + this.items.length : '');
       const kind = Media.kindOf(entry.base);
       const node = document.createElement(kind === 'video' ? 'video' : 'img');
       if (kind === 'video') { node.controls = true; node.autoplay = true; node.playsInline = true; }

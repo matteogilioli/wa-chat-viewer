@@ -5,9 +5,10 @@
        node test/make-fixture.mjs [folder]
 
    Handy for trying out the interface (and for having something to demo)
-   without using a real conversation. It produces test/fixture/Chat WhatsApp
-   con Giulia Esposito.zip containing _chat.txt, voice notes, photos, a PDF
-   and a contact.
+   without using a real conversation. It produces two archives in test/fixture:
+   a one-to-one chat (_chat.txt, voice notes, photos, a PDF and a contact) and
+   a group chat (photos, an album, a sticker, a poll and, when ffmpeg is
+   installed, a video and a GIF).
    ========================================================================== */
 import fs from 'node:fs';
 import os from 'node:os';
@@ -225,13 +226,13 @@ write('00000009-STICKER-2026-04-05-10-06-40.png', png(220, 220, 1));
 for (let k = 0; k < 5; k++) {
   write(`0000001${k}-PHOTO-2026-04-05-10-06-5${k * 2}.png`, png(300 + k * 40, 240 + k * 30, k % 3));
 }
-const conVideo = mp4(path.join(tmp, '00000015-VIDEO-2026-04-05-10-06-57.mp4'), 12, 1) &&
-                 mp4(path.join(tmp, '00000016-GIF-2026-04-05-10-06-58.mp4'), 3, 2);
+const hasVideo = mp4(path.join(tmp, '00000015-VIDEO-2026-04-05-10-06-57.mp4'), 12, 1) &&
+                mp4(path.join(tmp, '00000016-GIF-2026-04-05-10-06-58.mp4'), 3, 2);
 pack('Chat WhatsApp con Cinema Crew.zip', [
   '_chat.txt', '00000007-PHOTO-2026-04-05-10-03-10.png',
   '00000008-AUDIO-2026-04-05-10-05-30.wav', '00000009-STICKER-2026-04-05-10-06-40.png',
   ...Array.from({ length: 5 }, (_, k) => `0000001${k}-PHOTO-2026-04-05-10-06-5${k * 2}.png`),
-  ...(conVideo ? ['00000015-VIDEO-2026-04-05-10-06-57.mp4', '00000016-GIF-2026-04-05-10-06-58.mp4'] : []),
+  ...(hasVideo ? ['00000015-VIDEO-2026-04-05-10-06-57.mp4', '00000016-GIF-2026-04-05-10-06-58.mp4'] : []),
 ]);
 
 /* ---------------------------------------------------- photo-heavy archive */

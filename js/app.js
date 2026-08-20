@@ -96,7 +96,7 @@
     pickMe() {
       const saved = store.get(LS_ME + this.chatName);
       if (saved && this.participants.some(p => p.name === saved)) return saved;
-      // some exports sign your own messages with the localised word for "you"
+      // some exports sign your own messages with the localized word for "you"
       const you = this.participants.find(p => global.Markers.isYou(p.name));
       if (you) return you.name;
       if (this.participants.length === 2) {
@@ -262,8 +262,8 @@
          .replace(/^chat\s*(whatsapp)?\s*(con|with)?\s*[-–—]?\s*/i, '')
          .trim();
     if (n && n.toLowerCase() !== 'chat' && n.length < 80) return n;
-    if (isGroup) return 'Gruppo';
-    return participants.map(p => p.name).slice(0, 2).join(' e ') || 'Conversazione';
+    if (isGroup) return t('h.group');
+    return participants.map(p => p.name).slice(0, 2).join(', ') || t('h.chat');
   }
 
   /**

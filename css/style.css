@@ -15,7 +15,7 @@
   --bubble-out:    #d9fdd3;
   --bubble-sys:    #ffeecd;   /* encryption notice: warm yellow */
   --sys-fg:        #54656f;
-  --date-bg:       #ffffff;   /* date separator: neutral, not yellow */
+  --date-bg:       #ffffff;   /* day separator and date chip: neutral, not yellow */
   --date-fg:       #54656f;
   --meta:          rgba(17,27,33,.45);
   --accent:        #00a884;

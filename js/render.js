@@ -451,8 +451,9 @@
     a.href = m.loc.url;
     a.target = '_blank';
     a.rel = 'noopener noreferrer';
-    a.innerHTML = '<span class="d-ico">' + ICON.pin + '</span><span><span class="d-name">Posizione condivisa</span>' +
+    a.innerHTML = '<span class="d-ico">' + ICON.pin + '</span><span><span class="d-name"></span>' +
                   '<span class="d-sub">' + m.loc.lat + ', ' + m.loc.lng + '</span></span>';
+    a.querySelector('.d-name').textContent = t('m.location');
     return a;
   }
 
@@ -604,7 +605,7 @@
     btn.className = 'a-play';
     btn.type = 'button';
     btn.innerHTML = ICON.play;
-    btn.setAttribute('aria-label', 'Riproduci');
+    btn.setAttribute('aria-label', t('t.play'));
 
     const mid = document.createElement('div');
     mid.className = 'a-mid';

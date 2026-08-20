@@ -51,13 +51,13 @@
   const RE_ANGLE  = /<[^<>]{0,40}?[:：]\s*([^<>]+?)\s*>/;
   // Android: «NAME.ext (file attached)», or just the name on the first line.
   const RE_ANDROID = new RegExp('^\\s*(.+?\\.(?:' + EXT + '))\\s*(?:\\([^)]*\\))?\\s*$', 'i');
-  // Variant with mandatory parentheses: it spots an attachment when the file
-  // is NOT in the archive, without mistaking a message that merely names a
-  // file for an attachment.
   // Sender: «Name: text». The name may contain invisible markers.
   // The body can be empty: WhatsApp also exports «Name:» lines with nothing
   // after them, and those belong to that person, not to the system messages.
   const RE_SENDER = /^[\u200e\u200f\u202a-\u202e\u2066-\u2069]*([^:\n]{1,100}?):(?:[\s\u00a0]([\s\S]*))?$/;
+  // Variant with mandatory parentheses: it spots an attachment when the file
+  // is NOT in the archive, without mistaking a message that merely names a
+  // file for an attachment.
   const RE_ANDROID_TAGGED = new RegExp('^\\s*(.+?\\.(?:' + EXT + '))\\s*\\([^)]*\\)\\s*$', 'i');
 
   const RE_LOCATION = /https?:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/i;
@@ -178,9 +178,6 @@
     return { files: found, caption: rest };
   }
 
-  // Poll. WhatsApp exports «POLL: question» followed by one line
-  // «OPTION: answer (N votes)» per choice. The labels are translated,
-  // the shape isn't: same prefix repeated, count at the end.
   // Poll. WhatsApp exports «POLL: question» followed by one line
   // «OPTION: answer (N votes)» per choice — except sometimes it puts the
   // whole thing on a single line. The labels are translated, the shape isn't:
@@ -347,6 +344,12 @@
     };
   }
 
+  /** Comparison key for short texts (used to count how often they repeat). */
+  function shortKey(body) {
+    const t = String(body).replace(BIDI, '').trim().toLowerCase();
+    return t.length && t.length <= 80 ? t : null;
+  }
+
   /**
    * Finishes a message off: attachments, status (deleted, edited, media not
    * exported, call, system notice), location.
@@ -356,12 +359,6 @@
    * not the user» is structural and therefore language-independent; the
    * vocabulary only picks between deleted, call, notice and missing media.
    */
-  /** Comparison key for short texts (used to count how often they repeat). */
-  function shortKey(body) {
-    const t = String(body).replace(BIDI, '').trim().toLowerCase();
-    return t.length && t.length <= 80 ? t : null;
-  }
-
   function finalize(msg, fileMap, first, frequency, knownNames) {
     const M = global.Markers;
     let body = msg.body;

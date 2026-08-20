@@ -1,5 +1,5 @@
 /* ==========================================================================
-   virtual.js — virtualised list with variable row heights.
+   virtual.js — virtualized list with variable row heights.
 
    Only the bubbles actually on screen exist in the DOM (plus a safety margin
    above and below). Real heights are measured after painting and kept in a
